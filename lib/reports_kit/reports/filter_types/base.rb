@@ -40,6 +40,7 @@ module ReportsKit
         end
 
         def column
+          return "st_branches.id" if settings[:column] == 'st_sites.branch_id'
           settings[:column] || Data::Utils.quote_column_name(properties[:key])
         end
       end
