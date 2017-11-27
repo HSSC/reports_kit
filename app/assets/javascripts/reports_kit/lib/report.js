@@ -71,15 +71,6 @@ ReportsKit.Report = (function() {
       maxDate: moment(),
       locale: {
         format: 'MMM D, YYYY'
-      },
-      ranges: {
-        'Last 30 Days': [moment().subtract(30, 'days'), moment()],
-        'Last 2 Months': [moment().subtract(2, 'months'), moment()],
-        'Last 3 Months': [moment().subtract(3, 'months'), moment()],
-        'Last 4 Months': [moment().subtract(4, 'months'), moment()],
-        'Last 6 Months': [moment().subtract(6, 'months'), moment()],
-        'Last 12 Months': [moment().subtract(12, 'months'), moment()],
-        'Year To Date': [moment().startOf('year'), moment()]
       }
     });
   };
