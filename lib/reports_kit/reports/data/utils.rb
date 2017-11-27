@@ -11,7 +11,7 @@ module ReportsKit
         end
 
         def self.format_display_time(time)
-          time.strftime('%b %-d, \'%y')
+          time.strftime('%B %Y')
         end
 
         def self.format_time_value(value)
