@@ -21,6 +21,7 @@ module ReportsKit
         end
 
         def self.format_number(number)
+          return number if number.nil?
           number_i = number.to_i
           return number_i if number == number_i
           number.round(Generate::ROUND_PRECISION)
