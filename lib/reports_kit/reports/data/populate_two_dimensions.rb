@@ -23,6 +23,7 @@ module ReportsKit
           serieses_populated_primary_keys_secondary_keys_values.each do |series, primary_keys_secondary_keys_values|
             primary_keys_secondary_keys_values.each do |primary_key, secondary_keys_values|
               secondary_keys_values.each do |secondary_key, value|
+                next if value.nil?
                 secondary_keys_sums[secondary_key] += value
               end
             end
@@ -34,11 +35,35 @@ module ReportsKit
               secondary_keys_values = secondary_keys_values.sort_by { |key, _| sorted_secondary_keys.index(key) }
               secondary_keys_values.each do |secondary_key, value|
                 dimension_key = [primary_key, secondary_key]
+                next if value.nil?
                 serieses_dimension_keys_values[series][dimension_key] = value
                 secondary_keys_sums[secondary_key] += value
               end
             end
           end
+
+          clean_data_key = serieses_dimension_keys_values.keys.first
+          clean_data_value = serieses_dimension_keys_values.values.first
+
+          to_add = []
+          clean_data_value.each do |key,value|
+            date,grouper = key
+
+            if grouper.nil?
+              clean_data_value.delete(key)
+              sorted_secondary_keys.each do |key|
+                next if key.nil?
+                new_key = [date, key]
+                to_add << new_key
+              end
+            end
+          end
+
+          to_add.each do |key|
+            clean_data_value[key] = nil
+          end
+
+          serieses_dimension_keys_values[clean_data_key] = clean_data_value
           serieses_dimension_keys_values
         end
 
@@ -50,7 +75,7 @@ module ReportsKit
               primary_keys.each do |primary_key|
                 serieses_populated_primary_keys_secondary_keys_values[series][primary_key] = {}
                 secondary_keys.each do |secondary_key|
-                  value = serieses_primary_keys_secondary_keys_values[series][primary_key].try(:[], secondary_key) || 0
+                  value = serieses_primary_keys_secondary_keys_values[series][primary_key].try(:[], secondary_key)
                   serieses_populated_primary_keys_secondary_keys_values[series][primary_key][secondary_key] = value
                 end
               end
