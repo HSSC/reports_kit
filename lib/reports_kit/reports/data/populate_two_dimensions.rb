@@ -35,8 +35,8 @@ module ReportsKit
               secondary_keys_values = secondary_keys_values.sort_by { |key, _| sorted_secondary_keys.index(key) }
               secondary_keys_values.each do |secondary_key, value|
                 dimension_key = [primary_key, secondary_key]
-                next if value.nil?
                 serieses_dimension_keys_values[series][dimension_key] = value
+                next if value.nil?
                 secondary_keys_sums[secondary_key] += value
               end
             end
