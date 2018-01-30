@@ -23,12 +23,18 @@ module ReportsKit
           serieses_populated_primary_keys_secondary_keys_values.each do |series, primary_keys_secondary_keys_values|
             primary_keys_secondary_keys_values.each do |primary_key, secondary_keys_values|
               secondary_keys_values.each do |secondary_key, value|
-                next if value.nil?
-                secondary_keys_sums[secondary_key] += value
+                if secondary_keys_sums[secondary_key].nil?
+                  secondary_keys_sums[secondary_key] = value
+                elsif value.nil?
+                elsif secondary_keys_sums[secondary_key].nil? && value.nil?
+                  secondary_keys_sums[secondary_key] = nil
+                else
+                  secondary_keys_sums[secondary_key] += value
+                end
               end
             end
           end
-          sorted_secondary_keys = secondary_keys_sums.sort_by(&:last).reverse.map(&:first)
+          sorted_secondary_keys = secondary_keys_sums.sort_by{|i| i.last.to_i}.reverse.map(&:first)
           serieses_populated_primary_keys_secondary_keys_values.each do |series, primary_key_secondary_keys_values|
             serieses_dimension_keys_values[series] = {}
             primary_key_secondary_keys_values.each do |primary_key, secondary_keys_values|
@@ -36,34 +42,17 @@ module ReportsKit
               secondary_keys_values.each do |secondary_key, value|
                 dimension_key = [primary_key, secondary_key]
                 serieses_dimension_keys_values[series][dimension_key] = value
-                next if value.nil?
-                secondary_keys_sums[secondary_key] += value
+                if secondary_keys_sums[secondary_key].nil?
+                  secondary_keys_sums[secondary_key] = value
+                elsif value.nil?
+                elsif secondary_keys_sums[secondary_key].nil? && value.nil?
+                  secondary_keys_sums[secondary_key] = nil
+                else
+                  secondary_keys_sums[secondary_key] += value
+                end
               end
             end
           end
-
-          clean_data_key = serieses_dimension_keys_values.keys.first
-          clean_data_value = serieses_dimension_keys_values.values.first
-
-          to_add = []
-          clean_data_value.each do |key,value|
-            date,grouper = key
-
-            if grouper.nil?
-              clean_data_value.delete(key)
-              sorted_secondary_keys.each do |key|
-                next if key.nil?
-                new_key = [date, key]
-                to_add << new_key
-              end
-            end
-          end
-
-          to_add.each do |key|
-            clean_data_value[key] = nil
-          end
-
-          serieses_dimension_keys_values[clean_data_key] = clean_data_value
           serieses_dimension_keys_values
         end
 
