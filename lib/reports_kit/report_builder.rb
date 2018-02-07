@@ -51,7 +51,7 @@ module ReportsKit
     def export_button(text, format, options, &block)
       data = {
         role: 'reports_kit_export_button',
-        path: view_context.reports_kit.reports_kit_reports_path({ format: format }.merge(additional_params))
+        path: view_context.reports_kit.reports_kit_reports_url({ format: format }.merge(additional_params))
       }
       options = { class: 'btn btn-primary', data: data }.merge(options)
       if block_given?
@@ -64,7 +64,7 @@ module ReportsKit
     private
 
     def reports_data_path
-      @reports_data_path ||= view_context.reports_kit.reports_kit_reports_path({ format: 'json' }.merge(additional_params))
+      @reports_data_path ||= view_context.reports_kit.reports_kit_reports_url({ format: 'json' }.merge(additional_params))
     end
 
     def action_elements_container
