@@ -6874,6 +6874,19 @@ module.exports = function(Chart) {
       if (me.options.reverse) {
         legendItems.reverse();
       }
+      
+      legendItems.sort(function (a, b) {
+        var upperA = a.text.toUpperCase();
+        var upperB = b.text.toUpperCase();
+
+        if (upperA === "OVERALL") { return -1; }
+        if (upperB === "OVERALL") { return 1; }
+
+        if (upperA < upperB) { return -1; }
+        if (upperA > upperB) { return 1; }
+
+        return 0;
+      });
 
       me.legendItems = legendItems;
     },
